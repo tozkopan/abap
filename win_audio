@@ -1,0 +1,45 @@
+************************************************************************
+* ZTEST_SOUND is free software: you can redistribute it and/or modify  *
+* it under the terms of the GNU General Public License as published by *
+* the Free Software Foundation, either version 3 of the License, or    *
+* (at your option) any later version.                                  *
+*                                                                      *
+* ZTEST_SOUND is distributed in the hope that it will be useful,       *
+* but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+* GNU General Public License for more details.                         *
+*                                                                      *
+* You should have received a copy of the GNU General Public License    *
+* along with this program. If not, see <http://www.gnu.org/licenses/>. *
+*                                                                      *
+*                                                                      *
+* Developer:                                                           *
+*   Nes (nalonsos [at] gmail [dot] com)                                *
+*                                                                      *
+************************************************************************
+REPORT  ZTEST_SOUND.  
+
+DATA: url TYPE string,       
+      owmp TYPE ole2_object,       
+      ocnt TYPE ole2_object.  
+
+PARAMETERS: p_pc RADIOBUTTON GROUP g1,
+            p_http RADIOBUTTON GROUP g1.
+
+START-OF-SELECTION.
+
+IF p_pc = 'X'.
+  url = 'C:\WINDOWS\media\tada.wav'.
+ELSE.     
+  url = 'http://www.pacdv.com/sounds/applause-sounds/app-5.mp3'.   
+ENDIF.     
+
+* This code works on Windows XP, if you are using Windows 7 
+* you must replace WMPlayer.ocx with WMPlayer.ocx.7 
+CREATE OBJECT owmp 'WMPlayer.ocx'.   
+IF sy-subrc = 0.     
+  SET PROPERTY OF owmp 'Url' = url.     
+  GET PROPERTY OF owmp 'Controls' = ocnt.     
+  CALL METHOD OF ocnt 'Play'.     
+  WAIT UP TO 2 SECONDS.  "This is neccesary, if not the program ends
+ENDIF.
